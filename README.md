@@ -1,6 +1,6 @@
 #Introduction
 
-This repo contains the binding of libModSecurity(aka ModSecurity v3) in Node.js. These bindings will allow users to utilize the exposed libmodsecurity interfaces directly from node.js, without the use of ctypes.
+This repo contains the binding of libModSecurity(aka ModSecurity v3) in Node.js. These bindings will allow users to utilize the exposed libmodsecurity interfaces directly from node.js.
 
 
 #Installation guide
