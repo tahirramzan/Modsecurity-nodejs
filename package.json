@@ -1,0 +1,18 @@
+{
+  "name": "modsecurity-nodejs",
+  "version": "0.0.1",
+  "description": "NodeJS connector for ModSecurity",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ModSecurity",
+    "libModSecurity"
+  ],
+  "author": "Manish Malik <manishmalikkvs@gmail.com> (www.m2n.me)",
+  "license": "ISC",
+  "dependencies": {
+    "node-gyp": "^3.3.1"
+  }
+}
