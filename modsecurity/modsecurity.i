@@ -17,13 +17,11 @@
 
 %module modsecurity
 
-%include "std_string.i"
-%include "std_vector.i"
-/*
-* std_sstream.i not found.
-*%include "std_sstream.i"
-*/
+%include <std_string.i>
 %include "std/std_sstream.i"
+%include <std_vector.i>
+%include <std_map.i>
+%include "std/std_multimap.i"
 %include "attribute.i"
 %include "carrays.i"
 %include "typemaps.i"
@@ -32,10 +30,9 @@
 
 %{
 #include "modsecurity/intervention.h"
-#include "modsecurity/transaction/variable.h"
-#include "modsecurity/transaction/variables.h"
-#include "modsecurity/transaction/collection.h"
-#include "modsecurity/transaction/collections.h"
+#include "modsecurity/collection/variable.h"
+#include "modsecurity/collection/collection.h"
+#include "modsecurity/collection/collections.h"
 #include "modsecurity/transaction.h"
 #include "modsecurity/debug_log.h"
 #include "modsecurity/modsecurity.h"
@@ -46,15 +43,26 @@
 using std::basic_string;
 %}
 
+%rename(_del) modsecurity::collection::Variables::del(const std::string& key);
+%rename(_del) modsecurity::collection::Collections::del(const std::string& key);
+
+%immutable modsecurity::ModSecurityIntervention_t::url;
+%immutable modsecurity::ModSecurityIntervention_t::log;
+
+%immutable modsecurity::Transaction::m_clientIpAddress;
+%immutable modsecurity::Transaction::m_httpVersion;
+%immutable modsecurity::Transaction::m_method;
+%immutable modsecurity::Transaction::m_serverIpAddress;
+%immutable modsecurity::Transaction::m_uri;
+
 %ignore modsecurity::RulesProperties::parserError const;
 %ignore modsecurity::Transaction::m_requestBody;
 %ignore modsecurity::Transaction::m_responseBody;
 
 %include "modsecurity/intervention.h"
-%include "modsecurity/transaction/variable.h"
-%include "modsecurity/transaction/variables.h"
-%include "modsecurity/transaction/collection.h"
-%include "modsecurity/transaction/collections.h"
+%include "modsecurity/collection/variable.h"
+%include "modsecurity/collection/collection.h"
+%include "modsecurity/collection/collections.h"
 %include "modsecurity/transaction.h"
 %include "modsecurity/debug_log.h"
 %include "modsecurity/modsecurity.h"
