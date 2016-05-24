@@ -21,7 +21,11 @@
 %include "std/std_sstream.i"
 %include <std_vector.i>
 %include <std_map.i>
-%include "std/std_multimap.i"
+/*
+	Multimap not supported as of now.
+	TODO: Make it compatible
+	%include "std/std_multimap.i"
+*/
 %include "attribute.i"
 %include "carrays.i"
 %include "typemaps.i"
