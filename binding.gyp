@@ -3,8 +3,13 @@
     {
       "target_name": "modsecurity",
       "sources": [ "modsecurity_wrap.cxx" ],
-      "include_dirs": ['/usr/local/modsecurity/include/',],
-      "libraries": ['-L/usr/local/modsecurity/lib/'],
+      "include_dirs": ['/usr/include/modsecurity/',],
+      "libraries": ['/usr/lib/libmodsecurity.a',
+      '/usr/lib/libmodsecurity.so',
+      '/usr/lib/libmodsecurity.a',
+      '/usr/lib/libmodsecurity.so.3.0.0',
+      '/usr/lib/x86_64-linux-gnu/libxml2.so',
+      '/usr/lib/x86_64-linux-gnu/libcurl.so'],
       "cflags" : [ "-std=c++11" ],
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ]
