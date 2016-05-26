@@ -4,7 +4,7 @@
   "description": "NodeJS connector for ModSecurity",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/mocha/bin/mocha tests/unit_tests.js"
   },
   "keywords": [
     "ModSecurity",
@@ -13,6 +13,8 @@
   "author": "Manish Malik <manishmalikkvs@gmail.com> (www.m2n.me)",
   "license": "ISC",
   "dependencies": {
-    "node-gyp": "^3.3.1"
+    "node-gyp": "^3.3.1",
+    "mocha": "~2.5.3",
+    "chai": "~3.5.0"
   }
 }
