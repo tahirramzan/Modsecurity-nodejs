@@ -9,7 +9,8 @@
       '/usr/lib/libmodsecurity.a',
       '/usr/lib/libmodsecurity.so.3.0.0',
       '/usr/lib/x86_64-linux-gnu/libxml2.so',
-      '/usr/lib/x86_64-linux-gnu/libcurl.so'],
+      '/usr/lib/x86_64-linux-gnu/libcurl.so',
+      '/lib/x86_64-linux-gnu/libpcre.so.3'],
       "cflags" : [ "-std=c++11" ],
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ]
