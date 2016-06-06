@@ -19,10 +19,10 @@ var modsecurity = require('./../build/Release/modsecurity');
 
 
 //uri to the basic_rules.conf
-var main_rule_uri = "basic_rules.conf";
+var main_rule_uri = "./basic_rules.conf";
 
 //error variable
-var error = new Buffer(64);
+var error = "";
 
 //Initializes modsecurity APIs
 var modsec = new modsecurity.msc_init();
@@ -33,6 +33,7 @@ modsecurity.msc_set_connector_info(modsec, "ModSecurity-nodejs-test v0.0.1-alpha
 //Instantiate new rules object
 rules = new modsecurity.msc_create_rules_set();
 
+console.log('Adding local rules: ');
 /*
 	Add rules from file
 
@@ -45,7 +46,7 @@ ret = modsecurity.msc_rules_add_file(rules, main_rule_uri, error);
 
 if (ret < 0) {
 	console.log("Problems while loading the rules from file --\n");
-	console.log(error.toString());
+	console.log('Error : ' + error);
 	modsecurity.msc_rules_cleanup(rules);
 	modsecurity.msc_cleanup(modsec);
 } else {
@@ -53,7 +54,7 @@ if (ret < 0) {
 
 	//generate the rules dump
 	modsecurity.msc_rules_dump(rules);
-
+	console.log('Adding rules from remote files: ');
 	/*
 		Add remote rules
 
@@ -93,8 +94,6 @@ if (ret < 0) {
 			// adds dummy request body
 			if (modsecurity.msc_append_request_body(transaction, 'randomn test buffer', 'randomn test buffer'.length)) {
 				modsecurity.msc_process_request_body(transaction);
-				modsecurity.msc_rules_cleanup(rules);
-				modsecurity.msc_cleanup(modsec);
 			} else {
 				console.log('Failed to add dummy request body');
 				modsecurity.msc_rules_cleanup(rules);
