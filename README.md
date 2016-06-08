@@ -18,10 +18,5 @@ Before you follow the following steps make sure you have npm, nodejs and swig(3.
 
 4. To test the node module, you may use : `npm test`. Further to test the simple connector you can `cd` into `example` and type `node simple_example.js`.
 
-#TODO:
- - [ ] Support std_multimap.i
- - [ ] Automate the search for linking libraries
- - [ ] Add Unit tests
-
 #Disclaimer
-This is in early development phase and is highly unstable.
+This is in early development phase and is highly unstable. To see some known bugs or issues you may check [this](todo.md).
