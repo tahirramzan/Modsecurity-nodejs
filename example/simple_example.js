@@ -76,7 +76,7 @@ if (ret < 0) {
 		modsecurity.msc_rules_dump(rules);
 
 		//unit that will be used to inspect every requests
-		transaction = modsecurity.msc_new_transaction(modsec, rules, null);
+		transaction = new modsecurity.msc_new_transaction(modsec, rules, null);
 
 		//performs analysis on the connection
 		modsecurity.msc_process_connection(transaction, "127.0.0.1", 12345, "127.0.0.1", 80);
@@ -98,11 +98,13 @@ if (ret < 0) {
 				console.log('Failed to add dummy request body');
 				modsecurity.msc_rules_cleanup(rules);
 				modsecurity.msc_cleanup(modsec);
+				process.exit(); // close this program
 			}
 		} else {
 			console.log('Failed to add request headers in transaction');
 			modsecurity.msc_rules_cleanup(rules);
 			modsecurity.msc_cleanup(modsec);
+			process.exit(); // close this program
 		}
 
 		//adds dummy response header
