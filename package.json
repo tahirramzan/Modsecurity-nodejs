@@ -4,7 +4,8 @@
   "description": "NodeJS connector for ModSecurity",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha tests/unit_tests.js"
+    "test": "./node_modules/mocha/bin/mocha tests/unit_tests.js",
+    "regression_test" : "./node_modules/mocha/bin/mocha tests/regression_tests.js"
   },
   "keywords": [
     "ModSecurity",
