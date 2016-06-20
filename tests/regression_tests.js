@@ -33,8 +33,8 @@ findModSecDir(function(ModSecDir) {
 		var numberOfTestCases = fs.readdirSync(ModSecDir + '/test/test-cases/regression').length;
 		if (numberOfTestCases > 0) {
 			console.log('\n ModSecurity default test_cases found!');
-			runTestCases(ModSecDir + '/test/test-cases/regression');
-			// runTestCases('./tests/test-cases');
+			// runTestCases(ModSecDir + '/test/test-cases/regression');
+			runTestCases('./tests/test-cases');
 		} else {
 			console.log("\n It's seems like your default ModSecurity directory do not contain test_cases. \n Please make sure you clone ModSecurity repository in /opt or within /home");
 			console.log("\n\n Loading custom regressions test locally. \n PLEASE NOTE: IT'S HIGHLY RECOMMENDED TO CLONE CLONE ModSecurity REPO");
@@ -116,7 +116,7 @@ function loadTest(testCase, testFileName) {
 					if (testCase.expected.debug_log) {
 						var log = fs.readFileSync('./test.log', 'utf8');
 						regexMatch = log.match(testCase.expected.debug_log);
-						chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match.').to.not.null;
+						chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match. \n debug log: \n' + log + '\n expected debug-log: \n' + testCase.expected.debug_log + '\n').to.not.null;
 					}
 					return;
 				}
@@ -124,7 +124,7 @@ function loadTest(testCase, testFileName) {
 
 			if (testCase.request) {
 				// if not available assume it to be 1.1
-				var httpVersion = testCase.request.http_version ? testCase.request.http_version : "1.1";
+				var httpVersion = testCase.request.http_version ? (testCase.request.http_version + '') : '1.1';
 
 				// console.log('URI: ' + testCase.request.uri + '\nMethod: ' + testCase.request.method + '\nversion: ' + httpVersion);
 				modsecTransaction.processURI(testCase.request.uri, testCase.request.method, httpVersion);
@@ -139,7 +139,7 @@ function loadTest(testCase, testFileName) {
 					if (testCase.expected.debug_log) {
 						var log = fs.readFileSync('./test.log', 'utf8');
 						regexMatch = log.match(testCase.expected.debug_log);
-						chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match.').to.not.null;
+						chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match. \n debug log: \n' + log + '\n expected debug-log: \n' + testCase.expected.debug_log + '\n').to.not.null;
 					}
 					return;
 				}
@@ -161,31 +161,33 @@ function loadTest(testCase, testFileName) {
 					if (testCase.expected.debug_log) {
 						var log = fs.readFileSync('./test.log', 'utf8');
 						regexMatch = log.match(testCase.expected.debug_log);
-						chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match.').to.not.null;
+						chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match. \n debug log: \n' + log + '\n expected debug-log: \n' + testCase.expected.debug_log + '\n').to.not.null;
 					}
 					return;
 				}
 
-				// converting body from array to string.
-				var requestBody = testCase.request.body.join('\n');
+				if (testCase.request.body) {
+					// converting body from array to string.
+					var requestBody = testCase.request.body.join('\n');
 
-				modsecTransaction.appendRequestBody(requestBody, requestBody.length);
+					modsecTransaction.appendRequestBody(requestBody, requestBody.length);
 
-				modsecTransaction.processRequestBody();
+					modsecTransaction.processRequestBody();
 
-				modsecTransaction.intervention(modsecIntervention);
+					modsecTransaction.intervention(modsecIntervention);
 
-				if (modsecIntervention.status !== 200) {
-					if (testCase.expected.http_code) {
-						chai.expect(modsecIntervention.status, 'HTTP Status code do not match with the expected value.').to.equal(testCase.expected.http_code);
+					if (modsecIntervention.status !== 200) {
+						if (testCase.expected.http_code) {
+							chai.expect(modsecIntervention.status, 'HTTP Status code do not match with the expected value.').to.equal(testCase.expected.http_code);
+						}
+						modsecTransaction.processLogging(modsecIntervention.status);
+						if (testCase.expected.debug_log) {
+							var log = fs.readFileSync('./test.log', 'utf8');
+							regexMatch = log.match(testCase.expected.debug_log);
+							chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match. \n debug log: \n' + log + '\n expected debug-log: \n' + testCase.expected.debug_log + '\n').to.not.null;
+						}
+						return;
 					}
-					modsecTransaction.processLogging(modsecIntervention.status);
-					if (testCase.expected.debug_log) {
-						var log = fs.readFileSync('./test.log', 'utf8');
-						regexMatch = log.match(testCase.expected.debug_log);
-						chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match.').to.not.null;
-					}
-					return;
 				}
 			}
 
@@ -208,7 +210,7 @@ function loadTest(testCase, testFileName) {
 					if (testCase.expected.debug_log) {
 						var log = fs.readFileSync('./test.log', 'utf8');
 						regexMatch = log.match(testCase.expected.debug_log);
-						chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match.').to.not.null;
+						chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match. \n debug log: \n' + log + '\n expected debug-log: \n' + testCase.expected.debug_log + '\n').to.not.null;
 					}
 					return;
 				}
@@ -230,7 +232,7 @@ function loadTest(testCase, testFileName) {
 					if (testCase.expected.debug_log) {
 						var log = fs.readFileSync('./test.log', 'utf8');
 						regexMatch = log.match(testCase.expected.debug_log);
-						chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match.').to.not.null;
+						chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match. \n debug log: \n' + log + '\n expected debug-log: \n' + testCase.expected.debug_log + '\n').to.not.null;
 					}
 					return;
 				}
