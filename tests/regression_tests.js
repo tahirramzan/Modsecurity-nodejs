@@ -82,7 +82,7 @@ function loadTest(testCase, testFileName) {
 		// console.log(retVal);
 
 		if (retVal < 0) {
-			chai.expect(testCase.expected.parser_error, 'Test Case expects parse error').to.exist;
+			chai.expect(testCase.expected.parser_error, 'Test Case expects parse error to exist. \n Received parser error: ' + rules.getParserError()).to.exist;
 			parseError = rules.getParserError().match(testCase.expected.parser_error);
 			chai.expect(parseError, 'regex miss-match\n parse-error: \n' + rules.getParserError() + '\n expected error: \n' + testCase.expected.parser_error + '\n').to.not.null;
 			//chai.expect(rules.getParserError(), 'Comparing parser error with expected error if available').to.match(testCase.expected.parser_error);	
