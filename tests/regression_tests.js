@@ -112,7 +112,7 @@ function loadTest(testCase, testFileName) {
 					if (testCase.expected.http_code) {
 						chai.expect(modsecIntervention.status, 'HTTP Status code do not match with the expected value.').to.equal(testCase.expected.http_code);
 					}
-					modsecTransaction.processLogging(modsecIntervention.status);
+					modsecTransaction.processLogging();
 					if (testCase.expected.debug_log) {
 						var log = fs.readFileSync('./test.log', 'utf8');
 						regexMatch = log.match(testCase.expected.debug_log);
@@ -135,7 +135,7 @@ function loadTest(testCase, testFileName) {
 					if (testCase.expected.http_code) {
 						chai.expect(modsecIntervention.status, 'HTTP Status code do not match with the expected value.').to.equal(testCase.expected.http_code);
 					}
-					modsecTransaction.processLogging(modsecIntervention.status);
+					modsecTransaction.processLogging();
 					if (testCase.expected.debug_log) {
 						var log = fs.readFileSync('./test.log', 'utf8');
 						regexMatch = log.match(testCase.expected.debug_log);
@@ -157,7 +157,7 @@ function loadTest(testCase, testFileName) {
 					if (testCase.expected.http_code) {
 						chai.expect(modsecIntervention.status, 'HTTP Status code do not match with the expected value.').to.equal(testCase.expected.http_code);
 					}
-					modsecTransaction.processLogging(modsecIntervention.status);
+					modsecTransaction.processLogging();
 					if (testCase.expected.debug_log) {
 						var log = fs.readFileSync('./test.log', 'utf8');
 						regexMatch = log.match(testCase.expected.debug_log);
@@ -180,7 +180,7 @@ function loadTest(testCase, testFileName) {
 						if (testCase.expected.http_code) {
 							chai.expect(modsecIntervention.status, 'HTTP Status code do not match with the expected value.').to.equal(testCase.expected.http_code);
 						}
-						modsecTransaction.processLogging(modsecIntervention.status);
+						modsecTransaction.processLogging();
 						if (testCase.expected.debug_log) {
 							var log = fs.readFileSync('./test.log', 'utf8');
 							regexMatch = log.match(testCase.expected.debug_log);
@@ -191,14 +191,13 @@ function loadTest(testCase, testFileName) {
 				}
 			}
 
-			debugger;
 			if (testCase.response) {
 				Object.keys(testCase.response.headers).forEach(function(responseHeader) {
 					modsecTransaction.addResponseHeader(responseHeader, testCase.response.headers[responseHeader]);
 					// console.log(testCase.request.headers[requestHeader]);
 				});
 
-				modsecTransaction.processResponseHeaders();
+				modsecTransaction.processResponseHeaders(modsecIntervention.status, "HTTP 1.1");
 
 				modsecTransaction.intervention(modsecIntervention);
 
@@ -206,7 +205,7 @@ function loadTest(testCase, testFileName) {
 					if (testCase.expected.http_code) {
 						chai.expect(modsecIntervention.status, 'HTTP Status code do not match with the expected value.').to.equal(testCase.expected.http_code);
 					}
-					modsecTransaction.processLogging(modsecIntervention.status);
+					modsecTransaction.processLogging();
 					if (testCase.expected.debug_log) {
 						var log = fs.readFileSync('./test.log', 'utf8');
 						regexMatch = log.match(testCase.expected.debug_log);
@@ -228,7 +227,7 @@ function loadTest(testCase, testFileName) {
 					if (testCase.expected.http_code) {
 						chai.expect(modsecIntervention.status, 'HTTP Status code do not match with the expected value.').to.equal(testCase.expected.http_code);
 					}
-					modsecTransaction.processLogging(modsecIntervention.status);
+					modsecTransaction.processLogging();
 					if (testCase.expected.debug_log) {
 						var log = fs.readFileSync('./test.log', 'utf8');
 						regexMatch = log.match(testCase.expected.debug_log);

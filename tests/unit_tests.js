@@ -19,7 +19,7 @@
 //We are using chai for assertions
 var chai = require('chai');
 
-var expect = chai.should(); // we are using the "should" style of Chai
+var should = chai.should();
 
 var modsecurity = require('./../build/Release/modsecurity');
 
@@ -51,9 +51,10 @@ describe('ModSecurity Unit Tests : ', function() {
 			//Parse error
 			ret = rules.getParserError();
 			ret.should.contain('Rules must have an ID.');
+
 		});
 
-		it('Loading rules from local conf file it should return 6', function() {
+		it('Loading rules from local conf file (it should return number of rules loaded i.e 6)', function() {
 			//Initializes modsecurity APIs
 			var modsec = new modsecurity.msc_init();
 
@@ -64,7 +65,7 @@ describe('ModSecurity Unit Tests : ', function() {
 			var error = "";
 
 			//Sets information about the connector utilizing the ModSec.
-			modsecurity.msc_set_connector_info(modsec, "ModSecurity-nodejs-test v0.0.1-alpha (Simple example of nodejs connector");
+			modsecurity.msc_set_connector_info(modsec, "ModSecurity-nodejs-test v0.0.1-alpha (Simple example of nodejs connector)");
 
 			//Instantiate new rules object
 			rules = new modsecurity.msc_create_rules_set();
@@ -85,7 +86,39 @@ describe('ModSecurity Unit Tests : ', function() {
 			ret.should.equal(6);
 
 		});
+
+		it('Loading rules from remote server (it should return number of rules loaded i.e 1)', function() {
+			//Initializes modsecurity APIs
+			var modsec = new modsecurity.msc_init();
+
+			//error variable
+			var error = "";
+
+			//Sets information about the connector utilizing the ModSec.
+			modsecurity.msc_set_connector_info(modsec, "ModSecurity-nodejs-test v0.0.1-alpha (Simple example of nodejs connector)");
+
+			//Instantiate new rules object
+			rules = new modsecurity.msc_create_rules_set();
+
+			/*
+				Add remote rules
+
+				TODO: FIX type mapping of char const** error
+				libmodsecurity requires error to be char const **, and updates the error variable when there
+				are some error while adding rules. By swig typemaping we can change the nodejs variable into char const **
+				but it is unable to update this variable.
+			*/
+			ret = modsecurity.msc_rules_add_remote(rules, "test",
+				"https://www.modsecurity.org/modsecurity-regression-test-secremoterules.txt", error);
+
+			modsecurity.msc_rules_cleanup(rules);
+			modsecurity.msc_cleanup(modsec);
+
+			ret.should.equal(1);
+			this.timeout(60000); //delay for reply
+		});
 	});
+
 	describe('Transaction related tests to', function() {
 		//Initializes modsecurity APIs
 		var modsec = new modsecurity.msc_init();
@@ -210,7 +243,7 @@ describe('ModSecurity Unit Tests : ', function() {
 		});
 
 		it('performs analysis on response headers', function() {
-			retVal = modsecurity.msc_process_response_headers(transaction);
+			retVal = modsecurity.msc_process_response_headers(transaction, 200, "HTTP 1.0");
 			retVal.should.equal(1);
 		});
 
@@ -220,7 +253,7 @@ describe('ModSecurity Unit Tests : ', function() {
 		});
 
 		it('Check if intervention status is ok', function() {
-			//TODO: do better testing on interventions
+			//TODO: do better testing on 	
 			modsecurity.msc_intervention(transaction, intervention);
 			intervention.status.should.equal(200);
 		});
@@ -238,11 +271,11 @@ describe('ModSecurity Unit Tests : ', function() {
 
 		it('Logging all the information related to this transaction', function() {
 			modsecurity.msc_intervention(transaction, intervention);
-			retVal = modsecurity.msc_process_logging(transaction, intervention.status);
+			retVal = modsecurity.msc_process_logging(transaction);
 			retVal.should.equal(1);
 		});
 
-		it('Cleaning up transaction and modsecurity instances', function(){
+		it('Cleaning up transaction and modsecurity instances', function() {
 			modsecurity.msc_transaction_cleanup(transaction);
 			modsecurity.msc_cleanup(modsec);
 		});

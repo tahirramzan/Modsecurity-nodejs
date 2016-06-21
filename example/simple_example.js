@@ -110,12 +110,12 @@ if (ret < 0) {
 		//adds dummy response header
 		if (modsecurity.msc_add_n_response_header(transaction, 'test', 'test'.length, 'test', 'test'.length)) {
 			//performs response headers analysis
-			modsecurity.msc_process_response_headers(transaction);
+			modsecurity.msc_process_response_headers(transaction, 200, "HTTP 1.0");
 
 			// adds dummy response body
 			if (modsecurity.msc_append_response_body(transaction, 'randomn test buffer', 'randomn test buffer'.length)) {
 				modsecurity.msc_process_response_body(transaction);
-				modsecurity.msc_process_logging(transaction, 200);
+				modsecurity.msc_process_logging(transaction);
 				modsecurity.msc_rules_cleanup(rules);
 				modsecurity.msc_cleanup(modsec);
 			} else {
