@@ -54,7 +54,7 @@ function runTestCases(testDir) {
 			if (testFile.split('.').pop() === 'json') {
 				var testCases = JSON.parse(fs.readFileSync(testDir + '/' + testFile, 'utf8'));
 				testCases.forEach(function(testCase) {
-					loadTest(testCase, testFile);
+					loadTest(testCase, testDir, testFile);
 				});
 			}
 		});
@@ -64,11 +64,13 @@ function runTestCases(testDir) {
 /*
 	Load mocha - chai based test
 */
-function loadTest(testCase, testFileName) {
+function loadTest(testCase, testDir, testFileName) {
 	it(testCase.title + ', ' + testFileName, function() {
 		//Initializes modsecurity APIs
 		var modsec = new modsecurity.ModSecurity();
 
+		//For tests involving remote rules
+		this.timeout(30000);
 		//Sets information about the connector utilizing the ModSec.
 		modsec.setConnectorInformation("ModSecurity-nodejs-regression v0.0.1-alpha (ModSecurity-Nodejs Regression test utility)");
 
@@ -76,6 +78,20 @@ function loadTest(testCase, testFileName) {
 
 		//Instantiate new rules object
 		rules = new modsecurity.Rules(debugLog);
+
+		//test case which include some rules
+		if (testCase.rules.join('\n').match('test-cases')) {
+			for (var i = 0; i < testCase.rules.length; i++) {
+				if (testCase.rules[i].match('test-cases')) {
+					testCase.rules[i] = testCase.rules[i].replace('test-cases', testDir);
+					// console.log(testCase.rules[i]);
+				}
+			}
+		}
+
+		if (testCase.expected.parser_error && testCase.expected.parser_error.match('test-cases')) {
+			testCase.expected.parser_error = testCase.expected.parser_error.replace('test-cases', testDir);
+		}
 
 		retVal = rules.load(testCase.rules.join('\n'), testFileName);
 
@@ -125,9 +141,9 @@ function loadTest(testCase, testFileName) {
 			if (testCase.request) {
 				// if not available assume it to be 1.1
 				var httpVersion = testCase.request.http_version ? (testCase.request.http_version + '') : '1.1';
-
-				// console.log('URI: ' + testCase.request.uri + '\nMethod: ' + testCase.request.method + '\nversion: ' + httpVersion);
-				modsecTransaction.processURI(testCase.request.uri, testCase.request.method, httpVersion);
+				var URI = testCase.request.uri ? testCase.request.uri : "";
+				console.log('URI: ' + testCase.request.uri + '\nMethod: ' + testCase.request.method + '\nversion: ' + httpVersion);
+				modsecTransaction.processURI(URI, testCase.request.method, httpVersion);
 
 				modsecTransaction.intervention(modsecIntervention);
 
@@ -213,27 +229,28 @@ function loadTest(testCase, testFileName) {
 					}
 					return;
 				}
+				if (testCase.response.body) {
+					// converting body from array to string.
+					var responseBody = testCase.response.body.join('\n');
 
-				// converting body from array to string.
-				var responseBody = testCase.response.body.join('\n');
+					modsecTransaction.appendResponseBody(responseBody, responseBody.length);
 
-				modsecTransaction.appendResponseBody(responseBody, responseBody.length);
+					modsecTransaction.processResponseBody();
 
-				modsecTransaction.processResponseBody();
+					modsecTransaction.intervention(modsecIntervention);
 
-				modsecTransaction.intervention(modsecIntervention);
-
-				if (modsecIntervention.status !== 200) {
-					if (testCase.expected.http_code) {
-						chai.expect(modsecIntervention.status, 'HTTP Status code do not match with the expected value.').to.equal(testCase.expected.http_code);
+					if (modsecIntervention.status !== 200) {
+						if (testCase.expected.http_code) {
+							chai.expect(modsecIntervention.status, 'HTTP Status code do not match with the expected value.').to.equal(testCase.expected.http_code);
+						}
+						modsecTransaction.processLogging();
+						if (testCase.expected.debug_log) {
+							var log = fs.readFileSync('./test.log', 'utf8');
+							regexMatch = log.match(testCase.expected.debug_log);
+							chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match. \n debug log: \n' + log + '\n expected debug-log: \n' + testCase.expected.debug_log + '\n').to.not.null;
+						}
+						return;
 					}
-					modsecTransaction.processLogging();
-					if (testCase.expected.debug_log) {
-						var log = fs.readFileSync('./test.log', 'utf8');
-						regexMatch = log.match(testCase.expected.debug_log);
-						chai.expect(regexMatch, 'Matching debug logs with expected logs. Regex miss-match. \n debug log: \n' + log + '\n expected debug-log: \n' + testCase.expected.debug_log + '\n').to.not.null;
-					}
-					return;
 				}
 			}
 		}
