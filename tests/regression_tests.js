@@ -142,7 +142,7 @@ function loadTest(testCase, testDir, testFileName) {
 				// if not available assume it to be 1.1
 				var httpVersion = testCase.request.http_version ? (testCase.request.http_version + '') : '1.1';
 				var URI = testCase.request.uri ? testCase.request.uri : "";
-				console.log('URI: ' + testCase.request.uri + '\nMethod: ' + testCase.request.method + '\nversion: ' + httpVersion);
+				// console.log('URI: ' + testCase.request.uri + '\nMethod: ' + testCase.request.method + '\nversion: ' + httpVersion);
 				modsecTransaction.processURI(URI, testCase.request.method, httpVersion);
 
 				modsecTransaction.intervention(modsecIntervention);
@@ -162,7 +162,7 @@ function loadTest(testCase, testDir, testFileName) {
 
 				Object.keys(testCase.request.headers).forEach(function(requestHeader) {
 					modsecTransaction.addRequestHeader(requestHeader, testCase.request.headers[requestHeader]);
-					// console.log(testCase.request.headers[requestHeader]);
+					//console.log(testCase.request.headers[requestHeader]);
 				});
 
 				modsecTransaction.processRequestHeaders();
@@ -184,8 +184,8 @@ function loadTest(testCase, testDir, testFileName) {
 
 				if (testCase.request.body) {
 					// converting body from array to string.
-					var requestBody = testCase.request.body.join('\n');
-
+					var requestBody = testCase.request.body.join('');
+					// console.log(requestBody);
 					modsecTransaction.appendRequestBody(requestBody, requestBody.length);
 
 					modsecTransaction.processRequestBody();
@@ -231,7 +231,7 @@ function loadTest(testCase, testDir, testFileName) {
 				}
 				if (testCase.response.body) {
 					// converting body from array to string.
-					var responseBody = testCase.response.body.join('\n');
+					var responseBody = testCase.response.body.join('');
 
 					modsecTransaction.appendResponseBody(responseBody, responseBody.length);
 
