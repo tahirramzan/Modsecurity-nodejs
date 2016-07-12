@@ -12,7 +12,8 @@
       '/usr/lib/x86_64-linux-gnu/libcurl.so',
       '/lib/x86_64-linux-gnu/libpcre.so.3',
       '/usr/lib/x86_64-linux-gnu/libyajl.so',
-      '/usr/lib/x86_64-linux-gnu/libGeoIP.so'],
+      '/usr/lib/x86_64-linux-gnu/libGeoIP.so',
+      '/usr/lib/x86_64-linux-gnu/liblmdb.so'],
       "cflags" : [ "-std=c++11" ],
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ]
