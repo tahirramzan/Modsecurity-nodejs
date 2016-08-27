@@ -3,6 +3,8 @@
 This repo contains the binding of libModSecurity(aka ModSecurity v3) in Node.js. These bindings will allow users to utilize the exposed libmodsecurity interfaces directly from node.js.
 
 
+Please head over to the project [**Wiki**](https://github.com/manishmalik/Modsecurity-nodejs/wiki) for more details.
+
 #Installation guide
 Before you follow the following steps make sure you have npm, nodejs and swig(3.0+) installed in your system.
 
